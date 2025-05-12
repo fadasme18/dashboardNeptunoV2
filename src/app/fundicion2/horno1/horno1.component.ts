@@ -182,7 +182,6 @@ export class Horno1Component implements OnInit, OnDestroy {
 
   //Fundciones callback que highcharts llamara cuando cree/actualice los graficos
   logChartInstance1 = (chart: Highcharts.Chart) => {
-    console.log('Instancia Grafico 1 recibida');
     this.chart1Instance = chart;
   };
   logChartInstance2 = (chart: Highcharts.Chart) => {

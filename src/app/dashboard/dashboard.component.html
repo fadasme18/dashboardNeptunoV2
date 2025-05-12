@@ -1,1 +1,220 @@
-<p>dashboard works!</p>
+<!-- ---------------------FUNDICION 1--------------------- -->
+<div class="horno-vista-container">
+  <div class="estado-maquina-wrapper">
+    <div
+      class="estado-maquina"
+      [ngClass]="{
+        online: estado_horno1F1 === true,
+        offline: estado_horno1F1 === false
+      }"
+    >
+      <span class="nombre-maquina">Horno 1</span>
+      <span class="tag-estado">
+        {{
+          estado_horno1F1 === true
+            ? "ONLINE"
+            : estado_horno1F1 === false
+            ? "OFFLINE"
+            : "ESPERANDO..."
+        }}
+      </span>
+    </div>
+
+    <div
+      class="estado-maquina"
+      [ngClass]="{
+        online: estado_horno2F1 === true,
+        offline: estado_horno2F1 === false
+      }"
+    >
+      <span class="nombre-maquina">Horno 2</span>
+      <span class="tag-estado">
+        {{
+          estado_horno2F1 === true
+            ? "ONLINE"
+            : estado_horno2F1 === false
+            ? "OFFLINE"
+            : "ESPERANDO..."
+        }}
+      </span>
+    </div>
+
+    <div
+      class="estado-maquina"
+      [ngClass]="{
+        online: estado_horno3F1 === true,
+        offline: estado_horno3F1 === false
+      }"
+    >
+      <span class="nombre-maquina">Horno 3</span>
+      <span class="tag-estado">
+        {{
+          estado_horno3F1 === true
+            ? "ONLINE"
+            : estado_horno3F1 === false
+            ? "OFFLINE"
+            : "ESPERANDO..."
+        }}
+      </span>
+    </div>
+
+    <div
+      class="estado-maquina"
+      [ngClass]="{
+        online: estado_horno4F1 === true,
+        offline: estado_horno4F1 === false
+      }"
+    >
+      <span class="nombre-maquina">Horno 4</span>
+      <span class="tag-estado">
+        {{
+          estado_horno4F1 === true
+            ? "ONLINE"
+            : estado_horno4F1 === false
+            ? "OFFLINE"
+            : "ESPERANDO..."
+        }}
+      </span>
+    </div>
+  </div>
+</div>
+<!-- --------------------------------------------------------------- -->
+
+<!-- ---------------------FUNDICION 2--------------------- -->
+
+<div class="horno-vista-container">
+  <div class="estado-maquina-wrapper">
+    <div
+      class="estado-maquina"
+      [ngClass]="{
+        online: estado_horno1F2 === true,
+        offline: estado_horno1F2 === false
+      }"
+    >
+      <span class="nombre-maquina">Horno Ind 1</span>
+      <span class="tag-estado">
+        {{
+          estado_horno1F2 === true
+            ? "ONLINE"
+            : estado_horno1F2 === false
+            ? "OFFLINE"
+            : "ESPERANDO..."
+        }}
+      </span>
+    </div>
+
+    <div
+      class="estado-maquina"
+      [ngClass]="{
+        online: estado_horno2F2 === true,
+        offline: estado_horno2F2 === false
+      }"
+    >
+      <span class="nombre-maquina">Horno Ind 2</span>
+      <span class="tag-estado">
+        {{
+          estado_horno2F2 === true
+            ? "ONLINE"
+            : estado_horno2F2 === false
+            ? "OFFLINE"
+            : "ESPERANDO..."
+        }}
+      </span>
+    </div>
+
+    <div
+      class="estado-maquina"
+      [ngClass]="{
+        online: estado_silo_cohete === true,
+        offline: estado_silo_cohete === false
+      }"
+    >
+      <span class="nombre-maquina">Silo Cohete</span>
+      <span class="tag-estado">
+        {{
+          estado_silo_cohete === true
+            ? "ONLINE"
+            : estado_silo_cohete === false
+            ? "OFFLINE"
+            : "ESPERANDO..."
+        }}
+      </span>
+    </div>
+
+    <div
+      class="estado-maquina"
+      [ngClass]="{
+        online: estado_silo_norte === true,
+        offline: estado_silo_norte === false
+      }"
+    >
+      <span class="nombre-maquina">Silo Norte (Arena Reutilizada)</span>
+      <span class="tag-estado">
+        {{
+          estado_silo_norte === true
+            ? "ONLINE"
+            : estado_silo_norte === false
+            ? "OFFLINE"
+            : "ESPERANDO..."
+        }}
+      </span>
+    </div>
+
+    <div
+      class="estado-maquina"
+      [ngClass]="{
+        online: estado_silo_sur === true,
+        offline: estado_silo_sur === false
+      }"
+    >
+      <span class="nombre-maquina">Silo Sur (Arena Nueva)</span>
+      <span class="tag-estado">
+        {{
+          estado_silo_sur === true
+            ? "ONLINE"
+            : estado_silo_sur === false
+            ? "OFFLINE"
+            : "ESPERANDO..."
+        }}
+      </span>
+    </div>
+
+    <div
+      class="estado-maquina"
+      [ngClass]="{
+        online: estado_hornoTT1F2 === true,
+        offline: estado_hornoTT1F2 === false
+      }"
+    >
+      <span class="nombre-maquina">Horno TT 1</span>
+      <span class="tag-estado">
+        {{
+          estado_hornoTT1F2 === true
+            ? "ONLINE"
+            : estado_hornoTT1F2 === false
+            ? "OFFLINE"
+            : "ESPERANDO..."
+        }}
+      </span>
+    </div>
+
+    <div
+      class="estado-maquina"
+      [ngClass]="{
+        online: estado_hornoTT2F2 === true,
+        offline: estado_hornoTT2F2 === false
+      }"
+    >
+      <span class="nombre-maquina">Horno TT 2</span>
+      <span class="tag-estado">
+        {{
+          estado_hornoTT2F2 === true
+            ? "ONLINE"
+            : estado_hornoTT2F2 === false
+            ? "OFFLINE"
+            : "ESPERANDO..."
+        }}
+      </span>
+    </div>
+  </div>
+</div>
