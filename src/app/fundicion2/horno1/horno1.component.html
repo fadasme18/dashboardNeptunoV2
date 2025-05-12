@@ -1,0 +1,119 @@
+<div class="horno-vista-container">
+    <div class="estado-maquina-wrapper">
+
+        <div class="estado-maquina"
+             [ngClass]="{
+               'online': estado_horno1F2 === true,
+               'offline': estado_horno1F2 === false
+             }">
+          <span class="nombre-maquina">Horno Ind 1</span>
+          <span class="tag-estado">
+            {{ estado_horno1F2 === true ? 'ONLINE' : (estado_horno1F2 === false ? 'OFFLINE' : 'ESPERANDO...') }}
+          </span>
+        </div>
+    
+        <div class="estado-maquina"
+             [ngClass]="{
+               'online': estado_horno2F2 === true, 'offline': estado_horno2F2 === false
+             }">
+          <span class="nombre-maquina">Horno Ind 2</span>
+          <span class="tag-estado">
+            {{ estado_horno2F2 === true ? 'ONLINE' : (estado_horno2F2 === false ? 'OFFLINE' : 'ESPERANDO...') }}
+          </span>
+        </div>
+    
+        <div class="estado-maquina"
+             [ngClass]="{
+               'online': estado_silo_cohete === true, 'offline': estado_silo_cohete === false
+             }">
+          <span class="nombre-maquina">Silo Cohete</span>
+          <span class="tag-estado">
+            {{ estado_silo_cohete === true ? 'ONLINE' : (estado_silo_cohete === false ? 'OFFLINE' : 'ESPERANDO...') }}
+          </span>
+        </div>
+
+        <div class="estado-maquina"
+             [ngClass]="{
+               'online': estado_silo_norte === true, 'offline': estado_silo_norte === false
+             }">
+          <span class="nombre-maquina">Silo Norte (Arena Reutilizada)</span>
+          <span class="tag-estado">
+            {{ estado_silo_norte === true ? 'ONLINE' : (estado_silo_norte === false ? 'OFFLINE' : 'ESPERANDO...') }}
+          </span>
+        </div>
+
+        <div class="estado-maquina"
+             [ngClass]="{
+               'online': estado_silo_sur === true, 'offline': estado_silo_sur === false
+             }">
+          <span class="nombre-maquina">Silo Sur (Arena Nueva)</span>
+          <span class="tag-estado">
+            {{ estado_silo_sur === true ? 'ONLINE' : (estado_silo_sur === false ? 'OFFLINE' : 'ESPERANDO...') }}
+          </span>
+        </div>
+
+        <div class="estado-maquina"
+             [ngClass]="{
+               'online': estado_hornoTT1F2 === true, 'offline': estado_hornoTT1F2 === false
+             }">
+          <span class="nombre-maquina">Horno TT 1</span>
+          <span class="tag-estado">
+            {{ estado_hornoTT1F2 === true ? 'ONLINE' : (estado_hornoTT1F2 === false ? 'OFFLINE' : 'ESPERANDO...') }}
+          </span>
+        </div>
+
+        <div class="estado-maquina"
+             [ngClass]="{
+               'online': estado_hornoTT2F2 === true, 'offline': estado_hornoTT2F2 === false
+             }">
+          <span class="nombre-maquina">Horno TT 2</span>
+          <span class="tag-estado">
+            {{ estado_hornoTT2F2 === true ? 'ONLINE' : (estado_hornoTT2F2 === false ? 'OFFLINE' : 'ESPERANDO...') }}
+          </span>
+        </div>
+    
+        </div>
+
+      
+    </div>
+
+  <div class="contenedor-graficos">
+    <p style="text-align: center; padding: 20px">
+    
+      <highcharts-chart
+        style="display: flex; flex-direction: column; gap: 30px"
+        [Highcharts]="Highcharts"
+        [options]="lineChartOptions4"
+        [(update)]="updateFlag"
+        [callbackFunction]="logChartInstance4"
+        style="width: 100%; height: 300px; display: block"
+      ></highcharts-chart>
+      <br>
+      <highcharts-chart
+        style="display: flex; flex-direction: column; gap: 30px"
+        [Highcharts]="Highcharts"
+        [options]="lineChartOptions1"
+        [(update)]="updateFlag"
+        [callbackFunction]="logChartInstance1"
+        style="width: 100%; height: 300px; display: block"
+      ></highcharts-chart>
+      <br>
+      <highcharts-chart
+        style="display: flex; flex-direction: column; gap: 30px"
+        [Highcharts]="Highcharts"
+        [options]="lineChartOptions2"
+        [(update)]="updateFlag"
+        [callbackFunction]="logChartInstance2"
+        style="width: 100%; height: 300px; display: block"
+      ></highcharts-chart>
+      <br>
+      <highcharts-chart
+        style="display: flex; flex-direction: column; gap: 30px"
+        [Highcharts]="Highcharts"
+        [options]="lineChartOptions3"
+        [(update)]="updateFlag"
+        [callbackFunction]="logChartInstance3"
+        style="width: 100%; height: 300px; display: block"
+      ></highcharts-chart>
+    </p>
+  </div>

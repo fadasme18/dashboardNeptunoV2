@@ -1,0 +1,89 @@
+<div class="horno-vista-container">
+    <div class="estado-maquina-wrapper">
+
+        <div class="estado-maquina"
+             [ngClass]="{
+               'online': estado_horno1F1 === true,
+               'offline': estado_horno1F1 === false
+             }">
+          <span class="nombre-maquina">Horno 1</span>
+          <span class="tag-estado">
+            {{ estado_horno1F1 === true ? 'ONLINE' : (estado_horno1F1 === false ? 'OFFLINE' : 'ESPERANDO...') }}
+          </span>
+        </div>
+    
+        <div class="estado-maquina"
+             [ngClass]="{
+               'online': estado_horno2F1 === true, 'offline': estado_horno2F1 === false
+             }">
+          <span class="nombre-maquina">Horno 2</span>
+          <span class="tag-estado">
+            {{ estado_horno2F1 === true ? 'ONLINE' : (estado_horno2F1 === false ? 'OFFLINE' : 'ESPERANDO...') }}
+          </span>
+        </div>
+    
+        <div class="estado-maquina"
+             [ngClass]="{
+               'online': estado_horno3F1 === true, 'offline': estado_horno3F1 === false
+             }">
+          <span class="nombre-maquina">Horno 3</span>
+          <span class="tag-estado">
+            {{ estado_horno3F1 === true ? 'ONLINE' : (estado_horno3F1 === false ? 'OFFLINE' : 'ESPERANDO...') }}
+          </span>
+        </div>
+
+        <div class="estado-maquina"
+             [ngClass]="{
+               'online': estado_horno4F1 === true, 'offline': estado_horno4F1 === false
+             }">
+          <span class="nombre-maquina">Horno 4</span>
+          <span class="tag-estado">
+            {{ estado_horno4F1 === true ? 'ONLINE' : (estado_horno4F1 === false ? 'OFFLINE' : 'ESPERANDO...') }}
+          </span>
+        </div>
+    
+        </div>
+
+      
+    </div>
+
+  <div class="contenedor-graficos">
+    <p style="text-align: center; padding: 20px">
+    
+      <highcharts-chart
+        style="display: flex; flex-direction: column; gap: 30px"
+        [Highcharts]="Highcharts"
+        [options]="lineChartOptions4"
+        [(update)]="updateFlag"
+        [callbackFunction]="logChartInstance4"
+        style="width: 100%; height: 300px; display: block"
+      ></highcharts-chart>
+      <br>
+      <highcharts-chart
+        style="display: flex; flex-direction: column; gap: 30px"
+        [Highcharts]="Highcharts"
+        [options]="lineChartOptions1"
+        [(update)]="updateFlag"
+        [callbackFunction]="logChartInstance1"
+        style="width: 100%; height: 300px; display: block"
+      ></highcharts-chart>
+      <br>
+      <highcharts-chart
+        style="display: flex; flex-direction: column; gap: 30px"
+        [Highcharts]="Highcharts"
+        [options]="lineChartOptions2"
+        [(update)]="updateFlag"
+        [callbackFunction]="logChartInstance2"
+        style="width: 100%; height: 300px; display: block"
+      ></highcharts-chart>
+      <br>
+      <highcharts-chart
+        style="display: flex; flex-direction: column; gap: 30px"
+        [Highcharts]="Highcharts"
+        [options]="lineChartOptions3"
+        [(update)]="updateFlag"
+        [callbackFunction]="logChartInstance3"
+        style="width: 100%; height: 300px; display: block"
+      ></highcharts-chart>
+    </p>
+  </div>

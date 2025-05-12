@@ -1,0 +1,115 @@
+.horno-vista-container {
+    position: relative;
+    padding: 15px;
+  }
+  
+  .estado-maquina-wrapper {
+    display: flex; // Organiza los cuadros de estado en una fila
+    flex-wrap: wrap; // Permite que los cuadros pasen a la siguiente línea si no caben
+    gap: 16px; // Espacio de separación ENTRE cada cuadro .estado-maquina
+    margin-bottom: 5px; // Espacio antes del contenedor de los gráficos
+    justify-content: flex-start; 
+  }
+  
+  .estado-maquina {
+    display: flex;
+    flex-direction: column; // Apila el nombre y el tag verticalmente
+    align-items: center; // Centra el contenido horizontalmente dentro del cuadro
+  
+    padding: 12px 15px; // Espaciado interno del cuadro
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: border-color 0.3s ease-in-out, transform 0.2s ease; // Añadida transformación para hover
+    min-width: 160px; // Un ancho mínimo para que los cuadros se vean bien
+    text-align: center; // Centra el texto del nombre si no ocupa todo el ancho
+  
+    // Pequeño efecto al pasar el mouse
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    }
+  
+    .nombre-maquina {
+      font-size: 1.15em; // Ligeramente más grande
+      font-weight: 600;
+      color: #2c3e50; // Un color de texto oscuro más suave
+      margin-bottom: 10px; // Espacio entre el nombre y el tag de estado
+      white-space: nowrap; // Evita que el nombre se parta
+    }
+  
+    .tag-estado {
+      padding: 6px 12px; // Un poco más de padding en el tag
+      border-radius: 5px;
+      font-size: 0.9em;
+      font-weight: bold;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: background-color 0.3s ease;
+      width: 100%; // Hace que el tag ocupe el ancho completo del cuadro
+      box-sizing: border-box; // Para que el padding no aumente el ancho total más allá del 100%
+    }
+  
+    // Estilo para el borde superior del cuadro, cambia según el estado
+    // Estado por defecto o "esperando"
+    &:not(.online):not(.offline) {
+      border-top: 4px solid #90a4ae; // gris azulado "esperando"
+      .tag-estado {
+        background-color: #90a4ae;
+      }
+    }
+  
+    // Cuando está online
+    &.online {
+      border-top: 4px solid #66bb6a; // Un verde más suave
+      .tag-estado {
+        background-color: #66bb6a;
+      }
+    }
+  
+    // Cuando está offline
+    &.offline {
+      border-top: 4px solid #ef5350; // Un rojo más suave
+      .tag-estado {
+        background-color: #ef5350;
+      }
+    }
+  }
+    
+  // --- Media Queries para Responsividad ---
+  @media (max-width: 768px) {
+    .estado-maquina-wrapper {
+      gap: 12px; // Menos espacio entre cuadros
+      justify-content: center; // Centra los cuadros si hay espacio
+    }
+  
+    .estado-maquina {
+      min-width: 140px; // Ajusta el ancho mínimo
+      padding: 10px;
+  
+      .nombre-maquina {
+        font-size: 1.05em;
+        margin-bottom: 8px;
+      }
+  
+      .tag-estado {
+        font-size: 0.85em;
+        padding: 5px 10px;
+      }
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .estado-maquina-wrapper {
+      flex-direction: column; // Apila los cuadros de estado verticalmente
+      align-items: stretch; // Hace que cada cuadro ocupe el ancho disponible
+      gap: 10px;
+    }
+  
+    .estado-maquina {
+      align-items: center; // Se mantiene centrado el contenido interno
+    }
+  }
