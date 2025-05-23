@@ -1,5 +1,78 @@
+<div class="dashboard-header">
+  <div class="connection-status">
+    Estado Conexión:
+    <span [ngClass]="{
+      'status-connecting': wsConnectionStatus === 'connecting',
+      'status-connected': wsConnectionStatus === 'connected',
+      'status-error': wsConnectionStatus === 'error' || wsConnectionStatus === 'closed'
+    }">
+      {{ wsConnectionStatus | uppercase }}
+    </span>
+  </div>
+  <div *ngIf="lastUpdateTime" class="last-update-time">
+    Última actualización: {{ lastUpdateTime | date:'mediumTime' }}
+  </div>
+</div>
+
+<div class="section-container">
+  <h2 class="section-title">FUNDICIÓN 1</h2>
+  <div class="horno-vista-container">
+    <div class="estado-maquina-wrapper">
+      <div
+        *ngFor="let maquina of maquinasFundicion1"
+        class="estado-maquina"
+        [ngClass]="{
+          online: maquina.estado === true,
+          offline: maquina.estado === false,
+          esperando: maquina.estado === null
+        }"
+      >
+        <span class="nombre-maquina">{{ maquina.nombreMostrado }}</span>
+        <span class="tag-estado">
+          {{
+            maquina.estado === true
+              ? "ONLINE"
+              : maquina.estado === false
+              ? "OFFLINE"
+              : "ESPERANDO..."
+          }}
+        </span>
+        </div>
+    </div>
+  </div>
+</div>
+<div class="section-container">
+  <h2 class="section-title">FUNDICIÓN 2</h2>
+  <div class="horno-vista-container">
+    <div class="estado-maquina-wrapper">
+      <div
+        *ngFor="let maquina of maquinasFundicion2"
+        class="estado-maquina"
+        [ngClass]="{
+          online: maquina.estado === true,
+          offline: maquina.estado === false,
+          esperando: maquina.estado === null
+        }"
+      >
+        <span class="nombre-maquina">{{ maquina.nombreMostrado }}</span>
+        <span class="tag-estado">
+          {{
+            maquina.estado === true
+              ? "ONLINE"
+              : maquina.estado === false
+              ? "OFFLINE"
+              : "ESPERANDO..."
+          }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <!-- ---------------------FUNDICION 1--------------------- -->
-<div class="horno-vista-container">
+<!-- <div class="horno-vista-container">
   <div class="estado-maquina-wrapper">
     <div
       class="estado-maquina"
@@ -77,12 +150,12 @@
       </span>
     </div>
   </div>
-</div>
+</div> -->
 <!-- --------------------------------------------------------------- -->
 
 <!-- ---------------------FUNDICION 2--------------------- -->
 
-<div class="horno-vista-container">
+<!-- <div class="horno-vista-container">
   <div class="estado-maquina-wrapper">
     <div
       class="estado-maquina"
@@ -217,4 +290,4 @@
       </span>
     </div>
   </div>
-</div>
+</div> -->
