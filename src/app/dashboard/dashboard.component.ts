@@ -23,17 +23,17 @@
 //     public estado_horno2F1: Boolean | null = null;
 //     public estado_horno3F1: Boolean | null = null;
 //     public estado_horno4F1: Boolean | null = null;
-  
+
 //     private wsSubscription: Subscription | undefined;
 //     private wsSubject: WebSocketSubject<any> | undefined;
-    
+
 //     private destroy$ = new Subject<void>();
 
 //   ngOnInit(): void {
 //       //Iniciar polling cada 30 seg
 //       this.conectarWebSocketEstados();
 //     }
-    
+
 //   ngOnDestroy(): void {
 //     this.destroy$.next();
 //     this.destroy$.complete();
@@ -49,13 +49,13 @@
 
 //   private conectarWebSocketEstados(): void {
 //     const WEBSOCKET_URL = 'ws://192.168.1.18:1880/ws/connectionstatus';
-    
+
 //     this.wsSubject = webSocket(WEBSOCKET_URL);
-  
+
 //     this.wsSubscription = this.wsSubject.subscribe(
 //       (payloadRecibido) => {
 //         console.log('Estado máquinas recibido:', payloadRecibido);
-  
+
 //         // El payloadRecibido es el objeto 'transformedData' de Node-RED
 //         if (payloadRecibido.hasOwnProperty('horno1F2')) {
 //           this.estado_horno1F2 = payloadRecibido.horno1F2 ? true : false;
@@ -102,7 +102,7 @@
 //       }
 //     );
 //   }
-  
+
 //   private ponerTodosLosEstadosDesconocidos(): void {
 //     this.estado_horno1F2 = null;
 //     this.estado_horno2F2 = null;
@@ -119,7 +119,13 @@
 // }
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core'; // Importar ChangeDetectorRef y ChangeDetectionStrategy
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core'; // Importar ChangeDetectorRef y ChangeDetectionStrategy
 import { Subject, Subscription } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
@@ -133,16 +139,57 @@ interface Maquina {
   // produccionActual?: number;
 }
 
+interface TiempoKPI {
+  minutos: number;
+  horas: number;
+  porcentaje: number;
+}
+
+interface ConsumoEnergeticoKPI {
+  valorInicialAcumuladorKWh: number | null;
+  timestampValorInicialUTC: string | null;
+  valorFinalAcumuladorKWh: number | null;
+  timestampValorFinalUTC: string | null;
+  consumoTotalEstimadoKWh: number;
+  notaImportante: string;
+}
+
+interface ProduccionKPI {
+  cantidadColadasDiaActual: number;
+  diaAnalizado?: string; // Hacer opcional si no siempre viene
+  nota?: string; // Hacer opcional
+}
+
+interface ContextoCalculoKPI {
+  fechaReporte: string;
+  horaReporte: string;
+  periodoAnalizadoDiaActual: {
+    inicio: string;
+    fin: string;
+  };
+  minutosDelHorarioLaboralHoyConsideradosParaNoUso?: number;
+  definicionHorarioLaboral?: string;
+  // ... otros campos relevantes del contexto que envíe Node-RED
+}
+
+// Interfaz principal para los KPIs del horno específico
+interface HornoPrincipalKPIs {
+  tiempoDeUso?: TiempoKPI; // Hacerlos opcionales por si algún dato no llega
+  tiempoDeNoUso?: TiempoKPI;
+  consumoEnergetico?: ConsumoEnergeticoKPI;
+  produccion?: ProduccionKPI;
+  contextoCalculoGeneral?: ContextoCalculoKPI;
+}
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush // Optimización de detección de cambios
+  changeDetection: ChangeDetectionStrategy.OnPush, // Optimización de detección de cambios
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-
   public maquinasFundicion1: Maquina[] = [
     { id: 'horno1F1', nombreMostrado: 'Horno 1', estado: null },
     { id: 'horno2F1', nombreMostrado: 'Horno 2', estado: null },
@@ -154,11 +201,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
     { id: 'horno1F2', nombreMostrado: 'Horno Ind 1', estado: null },
     { id: 'horno2F2', nombreMostrado: 'Horno Ind 2', estado: null },
     { id: 'silo_cohete', nombreMostrado: 'Silo Cohete', estado: null },
-    { id: 'silo_norte', nombreMostrado: 'Silo Norte (Arena Reutilizada)', estado: null },
+    {
+      id: 'silo_norte',
+      nombreMostrado: 'Silo Norte (Arena Reutilizada)',
+      estado: null,
+    },
     { id: 'silo_sur', nombreMostrado: 'Silo Sur (Arena Nueva)', estado: null },
     { id: 'hornoTT1F2', nombreMostrado: 'Horno TT 1', estado: null },
     { id: 'hornoTT2F2', nombreMostrado: 'Horno TT 2', estado: null },
   ];
+
+  public hornoPrincipalKPIs: HornoPrincipalKPIs | null = null; // Para los KPIs del horno DPM-C530
 
   // Puedes tener una lista consolidada si prefieres gestionar todo junto
   // public todasLasMaquinas: Maquina[] = [...this.maquinasFundicion1, ...this.maquinasFundicion2];
@@ -166,7 +219,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private wsSubscription: Subscription | undefined;
   private wsSubject: WebSocketSubject<any> | undefined;
   private destroy$ = new Subject<void>();
-  public wsConnectionStatus: 'connecting' | 'connected' | 'error' | 'closed' = 'connecting';
+  public wsConnectionStatus: 'connecting' | 'connected' | 'error' | 'closed' =
+    'connecting';
   public lastUpdateTime: Date | null = null;
 
   constructor(private cdr: ChangeDetectorRef) {} // Inyectar ChangeDetectorRef
@@ -184,7 +238,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
     if (this.wsSubject) {
       this.wsSubject.complete();
-      console.log('Subject WebSocket de estados completado (conexión cerrada).');
+      console.log(
+        'Subject WebSocket de estados completado (conexión cerrada).'
+      );
     }
   }
 
@@ -194,24 +250,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck(); // Notificar cambios
 
     this.wsSubject = webSocket({
-        url: WEBSOCKET_URL,
-        openObserver: {
-            next: () => {
-                console.log('WebSocket conectado exitosamente.');
-                this.wsConnectionStatus = 'connected';
-                this.cdr.markForCheck();
-            }
+      url: WEBSOCKET_URL,
+      openObserver: {
+        next: () => {
+          console.log('WebSocket conectado exitosamente.');
+          this.wsConnectionStatus = 'connected';
+          this.cdr.markForCheck();
         },
-        closeObserver: { // Maneja cierres (esperados o inesperados)
-            next: (event) => {
-                console.warn('WebSocket cerrado.', event);
-                this.wsConnectionStatus = 'closed';
-                this.ponerTodosLosEstadosDesconocidos();
-                // Opcional: intentar reconectar
-                // setTimeout(() => this.conectarWebSocketEstados(), 5000);
-                this.cdr.markForCheck();
-            }
-        }
+      },
+      closeObserver: {
+        // Maneja cierres (esperados o inesperados)
+        next: (event) => {
+          console.warn('WebSocket cerrado.', event);
+          this.wsConnectionStatus = 'closed';
+          this.ponerTodosLosEstadosDesconocidos();
+          // Opcional: intentar reconectar
+          // setTimeout(() => this.conectarWebSocketEstados(), 5000);
+          this.cdr.markForCheck();
+        },
+      },
     });
 
     this.wsSubscription = this.wsSubject.subscribe(
@@ -235,27 +292,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private actualizarEstadosDesdePayload(payload: any): void {
-    this.maquinasFundicion1.forEach(maquina => {
-      if (payload.hasOwnProperty(maquina.id)) {
-        maquina.estado = !!payload[maquina.id]; // Convierte a booleano (true/false)
-        // Aquí actualizarías otros KPIs si vinieran en el payload:
-        // if (payload[maquina.id]?.oee) maquina.oee = payload[maquina.id].oee;
-      }
-    });
-    this.maquinasFundicion2.forEach(maquina => {
+    // Actualizar estados de máquinas individuales (tu lógica actual)
+    this.maquinasFundicion1.forEach((maquina) => {
       if (payload.hasOwnProperty(maquina.id)) {
         maquina.estado = !!payload[maquina.id];
       }
     });
-    // Si usas 'todasLasMaquinas':
-    // this.todasLasMaquinas.forEach(maquina => ... );
+    this.maquinasFundicion2.forEach((maquina) => {
+      if (payload.hasOwnProperty(maquina.id)) {
+        maquina.estado = !!payload[maquina.id];
+      }
+    });
+
+    // NUEVO: Extraer y asignar los KPIs del horno principal
+    // Ajusta 'hornoDPM_C530_KPIs' al nombre exacto de la clave que envíes desde Node-RED
+    if (payload.hasOwnProperty('hornoDPM_C530_KPIs')) {
+      this.hornoPrincipalKPIs = payload.hornoDPM_C530_KPIs;
+      console.log('KPIs Horno Principal recibidos:', this.hornoPrincipalKPIs);
+    } else {
+      // Opcional: si no vienen los KPIs, podrías querer limpiarlos o mantener el valor anterior
+      // this.hornoPrincipalKPIs = null;
+    }
   }
 
   private ponerTodosLosEstadosDesconocidos(): void {
-    this.maquinasFundicion1.forEach(maquina => maquina.estado = null);
-    this.maquinasFundicion2.forEach(maquina => maquina.estado = null);
+    this.maquinasFundicion1.forEach((maquina) => (maquina.estado = null));
+    this.maquinasFundicion2.forEach((maquina) => (maquina.estado = null));
+    this.hornoPrincipalKPIs = null; // <--- AÑADIR ESTO para resetear los KPIs
     this.lastUpdateTime = null;
-    // this.todasLasMaquinas.forEach(maquina => maquina.estado = null);
     this.cdr.markForCheck();
   }
 }

@@ -67,7 +67,73 @@
       </div>
     </div>
   </div>
+
+  <div *ngIf="hornoPrincipalKPIs" class="section-container kpi-section">
+  <h2 class="section-title">Indicadores Clave - Horno Inducción Principal</h2>
+
+  <div *ngIf="hornoPrincipalKPIs.contextoCalculoGeneral as contexto" class="kpi-context">
+    <p>
+      <strong>Datos del Día:</strong> {{ contexto.fechaReporte }}
+      (hasta {{ contexto.horaReporte }}).
+    </p>
+    <p>
+      <strong>Periodo Laboral Analizado Hoy:</strong>
+      {{ contexto.periodoAnalizadoDiaActual.inicio }} -
+      {{ contexto.periodoAnalizadoDiaActual.fin }}
+    </p>
+  </div>
+
+  <div class="kpi-grid">
+    <div *ngIf="hornoPrincipalKPIs.produccion as produccion" class="kpi-card produccion-kpi">
+      <h3 class="kpi-title">Producción del Día</h3>
+      <div class="kpi-value-main">{{ produccion.cantidadColadasDiaActual }}</div>
+      <div class="kpi-unit">Colada(s)</div>
+      <small *ngIf="produccion.nota" class="kpi-note">{{ produccion.nota }}</small>
+    </div>
+
+    <div *ngIf="hornoPrincipalKPIs.tiempoDeUso as uso" class="kpi-card tiempo-kpi">
+      <h3 class="kpi-title">Tiempo de Uso</h3>
+      <div class="kpi-value-main">{{ uso.horas.toFixed(1) }} <span class="kpi-sub-unit">hrs</span></div>
+      <div class="kpi-detail">({{ uso.minutos }} min)</div>
+      <div class="kpi-value-percentage">{{ uso.porcentaje.toFixed(1) }}%</div>
+      <div class="kpi-unit-small">del periodo laboral analizado</div>
+    </div>
+
+    <div *ngIf="hornoPrincipalKPIs.tiempoDeNoUso as noUso" class="kpi-card tiempo-kpi">
+      <h3 class="kpi-title">Tiempo de No Uso</h3>
+      <div class="kpi-value-main">{{ noUso.horas.toFixed(1) }} <span class="kpi-sub-unit">hrs</span></div>
+      <div class="kpi-detail">({{ noUso.minutos }} min)</div>
+      <div class="kpi-value-percentage">{{ noUso.porcentaje.toFixed(1) }}%</div>
+      <div class="kpi-unit-small">del periodo laboral analizado</div>
+    </div>
+
+    <div *ngIf="hornoPrincipalKPIs.consumoEnergetico as consumo" class="kpi-card consumo-kpi">
+      <h3 class="kpi-title">Consumo Energético</h3>
+      <div class="kpi-value-main">
+        {{ consumo.consumoTotalEstimadoKWh.toFixed(2) }}
+        <span class="kpi-sub-unit">kWh</span>
+      </div>
+      <div class="kpi-detail-consumo">
+        <span>Inicial:
+          {{ consumo.valorInicialAcumuladorKWh !== null ? consumo.valorInicialAcumuladorKWh.toFixed(2) : 'N/A' }}
+          kWh
+          <small *ngIf="consumo.timestampValorInicialUTC">({{ consumo.timestampValorInicialUTC | date:'HH:mm' }}
+            UTC)</small>
+        </span>
+        <span>Final:
+          {{ consumo.valorFinalAcumuladorKWh !== null ? consumo.valorFinalAcumuladorKWh.toFixed(2) : 'N/A' }}
+          kWh
+          <small *ngIf="consumo.timestampValorFinalUTC">({{ consumo.timestampValorFinalUTC | date:'HH:mm' }}
+            UTC)</small>
+        </span>
+      </div>
+      <small *ngIf="consumo.notaImportante" class="kpi-note">{{ consumo.notaImportante }}</small>
+    </div>
+  </div>
 </div>
+</div>
+
+
 
 
 
