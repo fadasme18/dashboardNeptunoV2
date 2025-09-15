@@ -1,0 +1,59 @@
+services:
+  node-red:
+    image: nodered/node-red:latest
+    container_name: nodered
+    restart: always
+    environment:
+      - TZ=America/Santiago
+      - FLOWS=flows.json
+      - NODE_RED_ADMIN_AUTH_TYPE=credentials
+      - NODE_RED_ADMIN_AUTH_USERNAME=neptuno
+      - NODE_RED_ADMIN_AUTH_PASSWORD=$2a$12$LwxfPbVbryh825UCFGD7x.ZD0dmNosfOsj0vAiRHZ6nS6CyNTot66
+    ports:
+      - "1880:1880"
+      - "5168:5168/udp"
+      - "18899:18899/udp"
+    depends_on:
+      - influxdb
+    networks:
+      - nodered_influxdb_network
+    volumes:
+      - nodered_data:/data
+
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    restart: always
+    environment:
+      - TZ=America/Santiago
+      - INFLUXDB_DB=neptuno
+      - INFLUXDB_USER=neptuno
+      - INFLUXDB_USER_PASSWORD=neptuno
+    ports:
+      - "8086:8086"
+    networks:
+      - nodered_influxdb_network
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      
+  neptuno_dashboard:
+    image: neptuno-dashboard-v2
+    container_name: neptuno_dashboard
+    restart: always
+    environment: # Opcional para el dashboard, pero bueno para consistencia
+      - TZ=America/Santiago
+    ports:
+      - "4200:80" # Mapea el puerto 4200 del host al puerto 80 del contenedor Nginx
+    networks:
+      - nodered_influxdb_network
+
+#ADMIN TOKEN: oHNjxNAcLBa9lsUqImog2d9aV9AhB2uztRlIyynSW2r_ZW-0Ok860PS1dzysQ6lf4pGyiRNoe37PVtnymSozeg==
+
+#ALL ACCESS: 104Ahs0DQMzHNG6BXxSdzyuxSQkF3cbEa6ioRpNoPg544E_PMCo8oGAJtHOsnZRHubakabNl1AFbjyArYGIl4g==
+
+volumes:
+  nodered_data:
+  influxdb_data:
+networks:
+  nodered_influxdb_network:
+    driver: bridge
